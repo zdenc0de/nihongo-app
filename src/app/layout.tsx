@@ -1,23 +1,20 @@
+"use client";
+
 import "./globals.css";
-import type { Metadata } from "next";
-import { Noto_Serif_JP } from "next/font/google";
+import { ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const notoSerifJP = Noto_Serif_JP({
-  subsets: ["latin"],
-  weight: ["400","600","700","900"],
-  variable: "--font-kanji",
-  display: "swap",
-});
+const queryClient = new QueryClient();
 
-export const metadata: Metadata = {
-  title: "Nihongo Study",
-  description: "Kanji-focused Japanese study app",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ja" className={notoSerifJP.variable}>
-      <body>{children}</body>
+    <html lang="ja">
+      <body>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </body>
     </html>
   );
 }
+
