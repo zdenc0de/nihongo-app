@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchKanji } from "@/lib/kanjiApi";
-import KanjiCard from "@/components/kanjiCard";
+import KanjiCard from "@/components/KanjiCard";
 
 export default function Home() {
   const { data, isLoading, isError } = useQuery({
@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4 py-16">
-      <KanjiCard {...data} />
+      <KanjiCard kanjiData={data} />
     </main>
   );
 }
