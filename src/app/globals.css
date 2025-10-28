@@ -1,35 +1,106 @@
-/* Importa las tres directivas base de Tailwind.
-  Esto le dice a Tailwind que inyecte sus estilos base,
-  componentes y utilidades.
-*/
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4: debe ser la primera línea */
+@import "tailwindcss";
 
-/* Importa las fuentes que usaremos.
-  - Inter: Para la UI general (sans-serif)
-  - Noto Serif JP: Específicamente para mostrar kanji y japonés.
+/* NOTA: sin @import url(...) de Google Fonts.
+   Las fuentes se cargan con next/font (layout.tsx) y exponen variables CSS:
+   --font-inter (UI) y --font-kanji (para el kanji).
 */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;700&display=swap');
 
-/* Aquí definimos los estilos base para nuestro 'body'.
-  Usamos @apply para aplicar clases de utilidad de Tailwind.
-  Esto configurará nuestro fondo y color de texto base
-  para modo claro y oscuro automáticamente.
-*/
-@layer base {
-  body {
-    @apply bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
-    
-    /* Usa Inter como fuente principal para toda la UI */
-    font-family: 'Inter', sans-serif;
+:root {
+  /* Paleta base clara */
+  --background: #f7fafc; /* gris muy claro */
+  --foreground: #111827; /* gris-azulado oscuro */
+  --surface: #ffffff;
+  --border: rgba(17, 24, 39, 0.08);
+  --accent: #e11900;
+  --radius: 20px;
+
+  /* Tipografías (vienen de next/font) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --font-kanji: var(--font-kanji), "Noto Serif JP", "Hiragino Mincho ProN",
+    "Yu Mincho", serif;
+
+  --kanji-size: clamp(5rem, 16vw + 1rem, 14rem);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-sans);
+}
+
+/* Dark mode por preferencia del sistema */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111827;
+    --foreground: #f7fafc;
+    --surface: #0f172a; /* slate-900-ish */
+    --border: rgba(255, 255, 255, 0.08);
   }
+}
 
-  /* Clase de utilidad personalizada para texto en japonés.
-    La aplicaremos donde queramos mostrar kanji o hiragana.
-    (p.ej. <span className="jp-text">日本語</span>) 
-  */
-  .jp-text {
-    font-family: 'Noto Serif JP', serif;
-  }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Acento editorial minimal */
+.hr-accent {
+  height: 2px;
+  width: 56px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* Card contenedora (layout general de tus vistas) */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1rem, 2vw + 0.5rem, 2rem);
+  box-shadow:
+    0 1px 1px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.06);
+}
+
+/* Sub-card internas: misma estructura y proporción */
+.sub-card {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1rem, 2vw + 0.5rem, 2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Kanji dominante */
+.kanji-display {
+  font-family: var(--font-kanji);
+  font-weight: 900;
+  font-variation-settings: "wght" 900;
+  font-size: var(--kanji-size);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+/* Etiqueta para títulos de atributos (reutilizable) */
+.attr-label {
+  @apply text-sm font-semibold tracking-wide uppercase opacity-80;
+}
+
+/* Texto secundario para valores/meta */
+.meta {
+  font-size: clamp(0.9rem, 0.4vw + 0.85rem, 1rem);
+  opacity: 0.9;
 }
