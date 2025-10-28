@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 // Define los ítems de navegación que usaremos en el Sidebar
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/vocab', label: 'Vocabulario', icon: SpellCheck },
+  { href: '/vocabulary', label: 'Vocabulario', icon: SpellCheck },
   { href: '/kanji', label: 'Kanji', icon: BookMarked },
   { href: '/grammar', label: 'Gramática', icon: Milestone },
   { href: '/reading', label: 'Lectura', icon: BookOpen },
