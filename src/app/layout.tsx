@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 "use client";
 
 import "./globals.css";
@@ -14,18 +15,20 @@ import {
   BookOpen,
   Headphones,
 } from "lucide-react";
-import { AppSidebar } from "../components/AppSidebar";
+import { AppSidebar } from "@/components/AppSidebar"; // Asegúrate de que esta ruta es correcta (con alias)
 
+
+// Carga de fuentes usando next/font/google
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-inter", // Variable CSS que usará Tailwind
   display: "swap",
 });
 
 const notoSerifJP = Noto_Serif_JP({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-kanji",
+  weight: ["400", "700"], // Puedes añadir más pesos si los necesitas
+  variable: "--font-kanji", // Variable CSS que usará Tailwind
   display: "swap",
 });
 
@@ -44,7 +47,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <html lang="ja" className={`${inter.variable} ${notoSerifJP.variable}`}>
+    <html lang="ja" className={`${inter.variable} ${notoSerifJP.variable} dark`}> 
       <body>
         <QueryClientProvider client={queryClient}>
           <div className="flex min-h-screen">

@@ -2,18 +2,18 @@
 @import "tailwindcss";
 
 /* NOTA: sin @import url(...) de Google Fonts.
-   Las fuentes se cargan con next/font (layout.tsx) y exponen variables CSS:
-   --font-inter (UI) y --font-kanji (para el kanji).
+  Las fuentes se cargan con next/font (layout.tsx) y exponen variables CSS:
+  --font-inter (UI) y --font-kanji (para el kanji).
 */
 
 :root {
-  /* Paleta base clara */
-  --background: #f7fafc; /* gris muy claro */
-  --foreground: #111827; /* gris-azulado oscuro */
-  --surface: #ffffff;
-  --border: rgba(17, 24, 39, 0.08);
-  --accent: #e11900;
-  --radius: 20px;
+  /* Paleta base clara (Minimalista) */
+  --background: #ffffff; /* Blanco puro */
+  --foreground: #111111; /* Casi negro para texto */
+  --surface: #f9f9f9;    /* Un gris muy sutil para tarjetas */
+  --border: rgba(0, 0, 0, 0.08); /* Borde sutil */
+  --accent: #111111;     /* El acento es el propio texto (fuerte) */
+  --accent-secondary: #737373; /* Un gris neutro para meta-datos */
 
   /* Tipografías (vienen de next/font) */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
@@ -32,16 +32,35 @@
   --font-sans: var(--font-sans);
 }
 
-/* Dark mode por preferencia del sistema */
+/* Dark mode (monocromático) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #111827;
-    --foreground: #f7fafc;
-    --surface: #0f172a; /* slate-900-ish */
-    --border: rgba(255, 255, 255, 0.08);
+    --background: #0a0a0a; /* Casi negro */
+    --foreground: #f5f5f5; /* Blanco sutil para texto */
+    --surface: #1a1a1a;    /* Gris oscuro para tarjetas */
+    --border: rgba(255, 255, 255, 0.08); /* Borde sutil */
+    --accent: #f5f5f5;     /* El acento es el texto blanco */
+    --accent-secondary: #a3a3a3; /* Gris claro para meta-datos */
   }
 }
 
+/* Dark mode por preferencia del sistema */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* === INICIO DE CAMBIOS (Tu Paleta Artística) === */
+    
+    --background: #134857;        /* TU TEAL: para el fondo oscuro */
+    --foreground: #CFB787;        /* TU ORO: para el texto principal oscuro */
+    --surface: #0E3B47;           /* Un Teal más oscuro para las tarjetas */
+    --border: rgba(207, 183, 135, 0.2); /* Borde basado en tu Oro */
+    --accent: #CFB787;            /* TU ORO: para acentos primarios */
+    --accent-secondary: #81021F;  /* TU BURDEOS: para acentos secundarios */
+
+    /* === FIN DE CAMBIOS === */
+  }
+}
+
+/* --- TUS CLASES (Estas están perfectas) --- */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 
@@ -53,7 +72,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Acento editorial minimal */
 .hr-accent {
   height: 2px;
   width: 56px;
@@ -61,7 +79,6 @@ body {
   border-radius: 2px;
 }
 
-/* Card contenedora (layout general de tus vistas) */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -72,7 +89,6 @@ body {
     0 8px 24px rgba(0,0,0,0.06);
 }
 
-/* Sub-card internas: misma estructura y proporción */
 .sub-card {
   background: var(--background);
   border: 1px solid var(--border);
@@ -83,7 +99,6 @@ body {
   justify-content: center;
 }
 
-/* Kanji dominante */
 .kanji-display {
   font-family: var(--font-kanji);
   font-weight: 900;
@@ -92,14 +107,15 @@ body {
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-align: center;
+  /* Démosle el color de acento principal */
+  color: var(--accent);
 }
 
-/* Etiqueta para títulos de atributos (reutilizable) */
 .attr-label {
+  /* Esto está perfecto, @apply funciona dentro de globals.css */
   @apply text-sm font-semibold tracking-wide uppercase opacity-80;
 }
 
-/* Texto secundario para valores/meta */
 .meta {
   font-size: clamp(0.9rem, 0.4vw + 0.85rem, 1rem);
   opacity: 0.9;
