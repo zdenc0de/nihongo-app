@@ -34,7 +34,7 @@ export default function DashboardPage() {
         <p className="meta mt-2">
           Repasos pendientes para hoy:
         </p>
-        <p className="text-6xl font-bold text-right mt-4" style={{color: 'var(--accent-secondary)'}}>
+        <p className="text-6xl font-bold text-right mt-4 text-[var(--accent-secondary)]">
           12
         </p>
       </div>
