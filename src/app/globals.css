@@ -1,65 +1,38 @@
-/* Tailwind v4: debe ser la primera línea */
 @import "tailwindcss";
 
-/* NOTA: sin @import url(...) de Google Fonts.
-  Las fuentes se cargan con next/font (layout.tsx) y exponen variables CSS:
-  --font-inter (UI) y --font-kanji (para el kanji).
+/* NOTA: Las fuentes se cargan desde layout.tsx
 */
 
 :root {
-  /* Paleta base clara (Minimalista) */
+  /* Paleta base clara (Estilo Portafolio B&W) */
   --background: #ffffff; /* Blanco puro */
   --foreground: #111111; /* Casi negro para texto */
-  --surface: #f9f9f9;    /* Un gris muy sutil para tarjetas */
-  --border: rgba(0, 0, 0, 0.08); /* Borde sutil */
+  --surface: #ffffff;    /* Blanco para tarjetas */
+  --border: #e5e5e5;     /* Borde gris claro (sutil pero visible) */
   --accent: #111111;     /* El acento es el propio texto (fuerte) */
-  --accent-secondary: #737373; /* Un gris neutro para meta-datos */
-
-  /* Tipografías (vienen de next/font) */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
-    "Segoe UI Emoji";
-  --font-kanji: var(--font-kanji), "Noto Serif JP", "Hiragino Mincho ProN",
-    "Yu Mincho", serif;
-
-  --kanji-size: clamp(5rem, 16vw + 1rem, 14rem);
+  --accent-secondary: #737373; /* Gris neutro para meta-datos */
+  
+  /* El radio de 20px es muy grande. El estilo de tu portafolio
+     usa esquinas más sutiles. Vamos a reducirlo.
+     Y un radio "pill" para los botones.
+  */
+  --radius: 12px; 
+  --radius-pill: 999px;
 }
 
-:root {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-}
-
-/* Dark mode (monocromático) */
+/* Dark mode (Invertido) */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a; /* Casi negro */
     --foreground: #f5f5f5; /* Blanco sutil para texto */
-    --surface: #1a1a1a;    /* Gris oscuro para tarjetas */
-    --border: rgba(255, 255, 255, 0.08); /* Borde sutil */
+    --surface: #111111;    /* Ligeramente más claro que el fondo */
+    --border: #2e2e2e;     /* Borde sutil oscuro */
     --accent: #f5f5f5;     /* El acento es el texto blanco */
     --accent-secondary: #a3a3a3; /* Gris claro para meta-datos */
   }
 }
 
-/* Dark mode por preferencia del sistema */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* === INICIO DE CAMBIOS (Tu Paleta Artística) === */
-    
-    --background: #134857;        /* TU TEAL: para el fondo oscuro */
-    --foreground: #CFB787;        /* TU ORO: para el texto principal oscuro */
-    --surface: #0E3B47;           /* Un Teal más oscuro para las tarjetas */
-    --border: rgba(207, 183, 135, 0.2); /* Borde basado en tu Oro */
-    --accent: #CFB787;            /* TU ORO: para acentos primarios */
-    --accent-secondary: #81021F;  /* TU BURDEOS: para acentos secundarios */
-
-    /* === FIN DE CAMBIOS === */
-  }
-}
-
-/* --- TUS CLASES (Estas están perfectas) --- */
+/* --- TUS CLASES (Modificadas para el nuevo estilo) --- */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 
@@ -72,24 +45,24 @@ body {
 }
 
 .hr-accent {
-  height: 2px;
+  height: 1px; /* Más sutil */
   width: 56px;
-  background: var(--accent);
+  background: var(--border); /* Usamos el color de borde */
   border-radius: 2px;
 }
 
+/* .card ahora es más limpia: Sin sombra, solo borde */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius); /* Usamos el nuevo radio */
   padding: clamp(1rem, 2vw + 0.5rem, 2rem);
-  box-shadow:
-    0 1px 1px rgba(0,0,0,0.04),
-    0 8px 24px rgba(0,0,0,0.06);
+  /* Eliminamos el box-shadow */
 }
 
+/* .sub-card ahora tiene el mismo estilo */
 .sub-card {
-  background: var(--background);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: clamp(1rem, 2vw + 0.5rem, 2rem);
@@ -98,6 +71,7 @@ body {
   justify-content: center;
 }
 
+/* .kanji-display sigue siendo el protagonista */
 .kanji-display {
   font-family: var(--font-kanji);
   font-weight: 900;
@@ -106,21 +80,43 @@ body {
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-align: center;
-  /* Démosle el color de acento principal */
-  color: var(--accent);
+  color: var(--accent); /* Color de acento (texto principal) */
 }
 
 .attr-label {
-  /* Reemplazo de @apply por propiedades CSS equivalentes */
-  font-size: 0.875rem;
+  font-size: 0.8rem; /* Un poco más pequeño y sutil */
   line-height: 1.25rem;
   font-weight: 600;
-  letter-spacing: 0.025em;
+  letter-spacing: 0.05em; /* Más espaciado */
   text-transform: uppercase;
   opacity: 0.8;
+  color: var(--accent-secondary); /* Color secundario */
 }
 
 .meta {
   font-size: clamp(0.9rem, 0.4vw + 0.85rem, 1rem);
+  color: var(--accent-secondary); /* Color secundario */
   opacity: 0.9;
 }
+
+/* --- NUEVAS CLASES (Basadas en tu portafolio) --- */
+
+/* Para los botones de "píldora" */
+.btn-pill {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.btn-pill:hover {
+  background: var(--foreground);
+  color: var(--background);
+  border-color: var(--foreground);
+}
+
