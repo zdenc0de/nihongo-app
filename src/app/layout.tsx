@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 "use client";
 
 import "./globals.css";
@@ -15,20 +14,18 @@ import {
   BookOpen,
   Headphones,
 } from "lucide-react";
-import { AppSidebar } from "@/components/AppSidebar"; // Asegúrate de que esta ruta es correcta (con alias)
+import { AppSidebar } from "@/components/AppSidebar"; 
 
-
-// Carga de fuentes usando next/font/google
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter", // Variable CSS que usará Tailwind
+  variable: "--font-inter",
   display: "swap",
 });
 
 const notoSerifJP = Noto_Serif_JP({
   subsets: ["latin"],
-  weight: ["400", "700"], // Puedes añadir más pesos si los necesitas
-  variable: "--font-kanji", // Variable CSS que usará Tailwind
+  weight: ["400", "700"],
+  variable: "--font-kanji",
   display: "swap",
 });
 
@@ -43,7 +40,6 @@ const navItems = [
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  // Memoiza el QueryClient para evitar recrearlo en renders
   const [queryClient] = useState(() => new QueryClient());
 
   return (

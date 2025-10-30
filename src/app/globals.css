@@ -1,21 +1,14 @@
 @import "tailwindcss";
 
-/* NOTA: Las fuentes se cargan desde layout.tsx
-*/
-
 :root {
-  /* Paleta base clara (Estilo Portafolio B&W) */
-  --background: #ffffff; /* Blanco puro */
-  --foreground: #111111; /* Casi negro para texto */
-  --surface: #ffffff;    /* Blanco para tarjetas */
-  --border: #e5e5e5;     /* Borde gris claro (sutil pero visible) */
-  --accent: #111111;     /* El acento es el propio texto (fuerte) */
-  --accent-secondary: #737373; /* Gris neutro para meta-datos */
-  
-  /* El radio de 20px es muy grande. El estilo de tu portafolio
-     usa esquinas más sutiles. Vamos a reducirlo.
-     Y un radio "pill" para los botones.
-  */
+
+  --background: #ffffff; 
+  --foreground: #111111;
+  --surface: #ffffff;
+  --border: #e5e5e5;
+  --accent: #111111;
+  --accent-secondary: #737373;
+
   --radius: 12px; 
   --radius-pill: 999px;
 }
