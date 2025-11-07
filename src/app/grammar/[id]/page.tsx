@@ -1,20 +1,17 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
-// 1. Recibimos 'params'. Gracias a la carpeta [id], 
-//    params será { id: '1' } o { id: '5' }, etc.
 export default async function GrammarDetailPage({ params }: { params: { id: string } }) {
 
-  const supabase = await createClient(); // createClient() devuelve una Promise, await para obtener el cliente
+  const supabase = await createClient(); // createClient() devuelve una Promise
   
-  // 2. Convertimos el 'id' de la URL (string) a un número
   const grammarId = parseInt(params.id, 10);
 
   if (isNaN(grammarId)) {
     return <p className="text-red-500">ID de gramática inválido.</p>;
   }
 
-  // 3. CONSULTA #1: Buscar el punto de gramática principal
+  // CONSULTA #1: Buscar el punto de gramática principal
   const { data: grammar, error: grammarError } = await supabase
     .from('grammar')
     .select('*')
@@ -25,18 +22,14 @@ export default async function GrammarDetailPage({ params }: { params: { id: stri
     return <p className="text-red-500">Punto de gramática no encontrado.</p>;
   }
 
-  // 4. CONSULTA #2: Buscar los ejemplos relacionados
-  //    Esto es más simple que con kanji. Solo buscamos en 'grammar_examples'
-  //    donde el 'grammar_id' coincida.
+  // CONSULTA #2: Buscar los ejemplos relacionados
   const { data: examples } = await supabase
     .from('grammar_examples')
     .select('*')
     .eq('grammar_id', grammarId);
-    // No usamos .single() porque esperamos MÚLTIPLES ejemplos
 
   return (
     <div>
-      {/* Botón simple para volver a la lista */}
       <Link href="/grammar" className="meta mb-6 inline-block">&larr; Volver a la lista de Gramática</Link>
 
       {/* SECCIÓN DE GRAMÁTICA PRINCIPAL */}
@@ -45,9 +38,6 @@ export default async function GrammarDetailPage({ params }: { params: { id: stri
         <p className="text-2xl mt-2">{grammar.meaning_es}</p>
         
         <h2 className="attr-label mt-6 mb-2">Forma de Uso</h2>
-        {/* 'whitespace-pre-line' respeta los saltos de línea (\n) 
-            que guardaste en la base de datos
-        */}
         <p className="meta text-lg whitespace-pre-line">{grammar.usage_jp}</p>
         
         <h2 className="attr-label mt-6 mb-2">Nivel JLPT</h2>
