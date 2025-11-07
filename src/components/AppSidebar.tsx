@@ -24,7 +24,7 @@ export function AppSidebar({ navItems }: AppSidebarProps) {
   const SidebarContent = () => (
     <>
       <div className="flex justify-between items-center p-4 mb-4">
-        <h1 className="text-2xl font-bold text-white">Nihongo N4</h1>
+        <h1 className="text-2xl font-bold text-white">日本語  シ</h1>
         <button
           onClick={() => setIsSidebarOpen(false)}
           className="text-gray-400 hover:text-white lg:hidden"
