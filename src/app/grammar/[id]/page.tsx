@@ -1,11 +1,17 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
-export default async function GrammarDetailPage({ params }: { params: { id: string } }) {
+export default async function GrammarDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> // <-- Cambio en el tipo
+}) {
 
-  const supabase = await createClient(); // createClient() devuelve una Promise
+  const supabase = await createClient();
   
-  const grammarId = parseInt(params.id, 10);
+  // Agregar await aquí
+  const { id } = await params;
+  const grammarId = parseInt(id, 10);
 
   if (isNaN(grammarId)) {
     return <p className="text-red-500">ID de gramática inválido.</p>;
@@ -15,7 +21,7 @@ export default async function GrammarDetailPage({ params }: { params: { id: stri
   const { data: grammar, error: grammarError } = await supabase
     .from('grammar')
     .select('*')
-    .eq('id', grammarId) // Buscamos por el ID
+    .eq('id', grammarId)
     .single();
 
   if (grammarError || !grammar) {

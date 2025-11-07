@@ -7,7 +7,7 @@ export default async function KanjiPage() {
 
   const { data: kanjis, error } = await supabase
     .from('kanji') 
-    .select('*')     
+    .select('*') 
     .order('id', { ascending: true });
 
   if (error) {

@@ -1,9 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
-export default async function KanjiDetailPage({ params }: { params: { character: string } }) {
+export default async function KanjiDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ character: string }> // <-- Cambio en el tipo
+}) {
 
-  const kanjiCharacter = decodeURIComponent(params.character);
+  // Agregar await aquí
+  const { character } = await params;
+  const kanjiCharacter = decodeURIComponent(character);
+  
   const supabase = await createClient();
 
   // CONSULTA #1: Buscar el Kanji principal
@@ -33,7 +40,7 @@ export default async function KanjiDetailPage({ params }: { params: { character:
 
       {/* SECCIÓN DEL KANJI PRINCIPAL */}
       <div className="card mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-9xl">
           <div className="flex flex-col items-center justify-center">
             <p className="font-kanji kanji-display">{kanji.character}</p>
           </div>
