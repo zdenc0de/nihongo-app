@@ -30,7 +30,7 @@ export default async function KanjiDetailPage({ params }: { params: { character:
   //   la información completa de cada palabra de vocabulario.
   const { data: vocabList, error: vocabError } = await supabase
     .from('kanji_in_vocabulary')
-    .select('vocabulary(*)') // <-- La magia del JOIN
+    .select('vocabulary(*)') 
     .eq('kanji_id', kanji.id);
 
   if (vocabError) {
