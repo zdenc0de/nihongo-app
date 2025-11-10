@@ -16,17 +16,13 @@ export default async function KanjiDetailPage({
   const supabase = await createClient();
 
   // ⭐ OPTIMIZACIÓN: Consultas en paralelo con Promise.all
-  const [kanjiResult, vocabResult] = await Promise.all([
+  const [kanjiResult] = await Promise.all([
     // CONSULTA #1: Buscar el Kanji principal
     supabase
       .from('kanji')
       .select('*')
       .eq('character', kanjiCharacter)
-      .single(),
-    
-    // CONSULTA #2: Buscar el Vocabulario relacionado (se ejecuta después de obtener kanji.id)
-    // Por ahora dejamos esto, pero lo optimizaremos abajo
-    Promise.resolve({ data: null, error: null }) as any
+      .single()
   ]);
 
   if (kanjiResult.error || !kanjiResult.data) {
