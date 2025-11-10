@@ -1,15 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
+// ⭐ Caché de 60 segundos para páginas de detalle
+export const revalidate = 60;
+
 export default async function GrammarDetailPage({ 
   params 
 }: { 
-  params: Promise<{ id: string }> // <-- Cambio en el tipo
+  params: Promise<{ id: string }>
 }) {
 
   const supabase = await createClient();
-  
-  // Agregar await aquí
   const { id } = await params;
   const grammarId = parseInt(id, 10);
 
@@ -17,22 +18,26 @@ export default async function GrammarDetailPage({
     return <p className="text-red-500">ID de gramática inválido.</p>;
   }
 
-  // CONSULTA #1: Buscar el punto de gramática principal
-  const { data: grammar, error: grammarError } = await supabase
-    .from('grammar')
-    .select('*')
-    .eq('id', grammarId)
-    .single();
+  // ⭐ OPTIMIZACIÓN: Consultas en paralelo con Promise.all
+  const [grammarResult, examplesResult] = await Promise.all([
+    supabase
+      .from('grammar')
+      .select('*')
+      .eq('id', grammarId)
+      .single(),
+    
+    supabase
+      .from('grammar_examples')
+      .select('*')
+      .eq('grammar_id', grammarId)
+  ]);
 
-  if (grammarError || !grammar) {
+  if (grammarResult.error || !grammarResult.data) {
     return <p className="text-red-500">Punto de gramática no encontrado.</p>;
   }
 
-  // CONSULTA #2: Buscar los ejemplos relacionados
-  const { data: examples } = await supabase
-    .from('grammar_examples')
-    .select('*')
-    .eq('grammar_id', grammarId);
+  const grammar = grammarResult.data;
+  const examples = examplesResult.data;
 
   return (
     <div>

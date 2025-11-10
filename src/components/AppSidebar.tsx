@@ -3,7 +3,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  LayoutDashboard,
+  SpellCheck,
+  BookMarked,
+  Milestone,
+  BookOpen,
+  Headphones,
+} from 'lucide-react';
 
 // Tipo para los ítems de navegación
 type NavItemProps = {
@@ -12,12 +21,19 @@ type NavItemProps = {
   icon: React.ElementType;
 };
 
-// Props del componente AppSidebar
-interface AppSidebarProps {
-  navItems: NavItemProps[];
-}
+// ⭐ Mueve navItems DENTRO del componente
+const navItems: NavItemProps[] = [
+  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/vocabulary", label: "Vocabulario", icon: SpellCheck },
+  { href: "/kanji", label: "Kanji", icon: BookMarked },
+  { href: "/grammar", label: "Gramática", icon: Milestone },
+  { href: "/reading", label: "Lectura", icon: BookOpen },
+  { href: "/listening", label: "Auditiva", icon: Headphones },
+  { href: "/review", label: "Repaso (SRS)", icon: Milestone },
+];
 
-export function AppSidebar({ navItems }: AppSidebarProps) {
+// ⭐ Ya no recibe props
+export function AppSidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
 

@@ -1,6 +1,7 @@
 // src/app/grammar/page.tsx
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ⭐ Caché de 60 segundos
 
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
@@ -11,39 +12,42 @@ const ITEMS_PER_PAGE = 12;
 export default async function GrammarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>; // <-- Cambio en el tipo
+  searchParams: Promise<{ page?: string }>;
 }) {
 
   const supabase = await createClient();
-  
-  // Agregar await aquí
   const params = await searchParams;
   const currentPage = parseInt(params.page ?? '1', 10);
 
   const from = (currentPage - 1) * ITEMS_PER_PAGE;
   const to = from + ITEMS_PER_PAGE - 1;
 
-  const { data: grammar, error } = await supabase
-    .from('grammar') 
-    .select('*')     
-    .order('id', { ascending: true })
-    .range(from, to); 
-
-  if (error) {
-    return <p className="text-red-500">Error al cargar la gramática: {error.message}</p>;
-  }
-
-  const { count, error: countError } = await supabase
-    .from('grammar')
-    .select('*', { 
+  // ⭐ OPTIMIZACIÓN: Consultas en paralelo con Promise.all
+  const [grammarResult, countResult] = await Promise.all([
+    supabase
+      .from('grammar') 
+      .select('*')     
+      .order('id', { ascending: true })
+      .range(from, to),
+    
+    supabase
+      .from('grammar')
+      .select('*', { 
         count: 'estimated',
         head: true 
-    });
+      })
+  ]);
 
-  if (countError || count === null) {
+  if (grammarResult.error) {
+    return <p className="text-red-500">Error al cargar la gramática: {grammarResult.error.message}</p>;
+  }
+
+  if (countResult.error || countResult.count === null) {
     return <p className="text-red-500">Error al contar la gramática.</p>;
   }
 
+  const grammar = grammarResult.data;
+  const count = countResult.count;
   const totalPages = Math.ceil(count / ITEMS_PER_PAGE);
 
   return (
@@ -62,6 +66,7 @@ export default async function GrammarPage({
             href={`/grammar/${item.id}`} 
             key={item.id}
             className="card p-4 flex flex-col justify-between transition-transform hover:scale-105"
+            prefetch={true} // ⭐ Prefetch para carga instantánea
           >
             <p className="font-kanji text-3xl font-bold mb-2">{item.structure}</p>
             <p className="meta">{item.meaning_es}</p>
