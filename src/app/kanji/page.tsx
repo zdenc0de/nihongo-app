@@ -1,13 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
+// ⭐ Caché de 60 segundos
+export const revalidate = 60;
+
 export default async function KanjiPage() {
   
   const supabase = await createClient();
 
   const { data: kanjis, error } = await supabase
     .from('kanji') 
-    .select('*') 
+    .select('id, character, meaning_es') // ⭐ Solo seleccionar campos necesarios
     .order('id', { ascending: true });
 
   if (error) {
@@ -25,12 +28,12 @@ export default async function KanjiPage() {
         {kanjis?.map((kanji) => (
           
           <Link 
-            href={`/kanji/${kanji.character}`} // La URL dinámica
+            href={`/kanji/${kanji.character}`}
             key={kanji.id} 
             className="card p-4 text-center transition-transform hover:scale-105 hover:shadow-lg"
+            prefetch={true} // ⭐ Prefetch automático
           >
             <p className="font-kanji text-5xl">{kanji.character}</p>
-            {/* Mostramos solo los 2 primeros significados */}
             <p className="meta">{kanji.meaning_es.slice(0, 2).join(', ')}</p>
           </Link>
 

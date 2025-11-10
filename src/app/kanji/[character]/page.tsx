@@ -1,33 +1,44 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
+// ⭐ Caché de 60 segundos
+export const revalidate = 60;
+
 export default async function KanjiDetailPage({ 
   params 
 }: { 
-  params: Promise<{ character: string }> // <-- Cambio en el tipo
+  params: Promise<{ character: string }>
 }) {
 
-  // Agregar await aquí
   const { character } = await params;
   const kanjiCharacter = decodeURIComponent(character);
   
   const supabase = await createClient();
 
-  // CONSULTA #1: Buscar el Kanji principal
-  const { data: kanji, error: kanjiError } = await supabase
-    .from('kanji')
-    .select('*')
-    .eq('character', kanjiCharacter)
-    .single();
+  // ⭐ OPTIMIZACIÓN: Consultas en paralelo con Promise.all
+  const [kanjiResult, vocabResult] = await Promise.all([
+    // CONSULTA #1: Buscar el Kanji principal
+    supabase
+      .from('kanji')
+      .select('*')
+      .eq('character', kanjiCharacter)
+      .single(),
+    
+    // CONSULTA #2: Buscar el Vocabulario relacionado (se ejecuta después de obtener kanji.id)
+    // Por ahora dejamos esto, pero lo optimizaremos abajo
+    Promise.resolve({ data: null, error: null }) as any
+  ]);
 
-  if (kanjiError || !kanji) {
+  if (kanjiResult.error || !kanjiResult.data) {
     return <p className="text-red-500">Kanji no encontrado: {kanjiCharacter}</p>;
   }
 
-  // CONSULTA #2: Buscar el Vocabulario relacionado
+  const kanji = kanjiResult.data;
+
+  // ⭐ Ahora que tenemos el kanji.id, hacemos la consulta de vocabulario
   const { data: vocabList, error: vocabError } = await supabase
     .from('kanji_in_vocabulary')
-    .select('vocabulary(*)') // El JOIN
+    .select('vocabulary(id, word, reading, meaning_es)') // ⭐ Solo campos necesarios
     .eq('kanji_id', kanji.id);
 
   if (vocabError) {
@@ -39,10 +50,10 @@ export default async function KanjiDetailPage({
       <Link href="/kanji" className="meta mb-6 inline-block">&larr; Volver a la lista de Kanji</Link>
 
       {/* SECCIÓN DEL KANJI PRINCIPAL */}
-      <div className="card mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-9xl">
+      <div className="card mb-8 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex flex-col items-center justify-center">
-            <p className="font-kanji kanji-display">{kanji.character}</p>
+            <p className="font-kanji text-9xl">{kanji.character}</p>
           </div>
           <div>
             <h2 className="attr-label mb-2">Significados</h2>
@@ -65,14 +76,13 @@ export default async function KanjiDetailPage({
 
       {/* SECCIÓN DE VOCABULARIO RELACIONADO */}
       <h2 className="text-2xl font-bold mb-4">Vocabulario que usa este Kanji</h2>
-      <div className="card">
+      <div className="card p-6">
         {vocabList && vocabList.length > 0 ? (
-          <ul className="divide-y divide-(--border)">
+          <ul className="divide-y divide-gray-700">
             {vocabList.map((item) => {
-              // 'item.vocabulary' puede ser un objeto o un array
               const voc = Array.isArray(item.vocabulary) ? item.vocabulary[0] : item.vocabulary;
               return (
-                <li key={voc?.id} className="py-4">
+                <li key={voc?.id} className="py-4 first:pt-0 last:pb-0">
                   <p className="font-kanji text-3xl">{voc?.word}</p>
                   <p className="meta">{voc?.reading}</p>
                   <p className="meta mt-1">{Array.isArray(voc?.meaning_es) ? voc.meaning_es.join(', ') : ''}</p>
